@@ -102,6 +102,27 @@ local function add_ore(modname, description, mineral_name, oredef)
 		oredef.block.groups = oredef.block.groups or {cracky = 1, level = 2}
 		oredef.block.sounds = oredef.block.sounds or default_metal_sounds
 		minetest.register_node(block_item, oredef.block)
+		if minetest.get_modpath("moreblocks") then
+			stairsplus:register_all("moreores", mineral_name.."_block", block_item, {
+				description = S("@1 Block", S(description)),
+				tiles = {img_base .. "_block.png"},
+				groups = {snappy = 1, bendy = 2, cracky = 1, melty = 2, level= 2},
+				sounds = default_metal_sounds
+			})
+		elseif minetest.get_modpath("stairs") then
+			stairs.register_stair_and_slab(
+				mineral_name.."_block",
+				block_item,
+				{snappy = 1, bendy = 2, cracky = 1, melty = 2, level= 2},
+				{img_base .. "_block.png"},
+				S("@1 Stair", S(description)),
+				S("@1 Slab", S(description)),
+				default_metal_sounds,
+				false,
+				S("Inner @1 Stair", S(description)),
+				S("Outer @1 Stair", S(description))
+			)
+		end
 		minetest.register_alias(mineral_name.."_block", block_item)
 		if oredef.makes.ingot then
 			minetest.register_craft( {
